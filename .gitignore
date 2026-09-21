@@ -114,3 +114,6 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
 .DS_Store
+
+# Rider local settings
+.idea/
