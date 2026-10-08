@@ -1,7 +1,5 @@
 # GymBro — Assessment 3
-## Audio credits and source record
-
-The following records the supplied download/source information. Platform names alone are not proof of permission; retain the applicable licence/download records. Creator names were not recorded for every Pixabay/Mixkit item.
+## Audio credits
 
 | Local file | Track / effect | Source |
 |---|---|---|
