@@ -8,7 +8,7 @@ public class GhostStateController : MonoBehaviour
     [SerializeField] private string characterName;
     private Animator animator;
     private Vector3 spawnPosition;
-    private float deadTime;
+    private Vector2Int facing = new Vector2Int(0, 1);
     public GhostMode Mode { get; private set; }
 
     private void Awake()
@@ -19,7 +19,7 @@ public class GhostStateController : MonoBehaviour
     public void SetMode(GhostMode mode)
     {
         Mode = mode;
-        string state = mode == GhostMode.Normal ? "NormalDown" : mode == GhostMode.Scared ? "ScaredDown" : mode.ToString();
+        string state = mode == GhostMode.Normal ? "Normal" + DirectionName() : mode == GhostMode.Scared ? "Scared" + DirectionName() : mode.ToString();
         animator.speed = 1f;
         animator.Play(characterName + "_" + state, 0, 0f);
     }
@@ -29,22 +29,25 @@ public class GhostStateController : MonoBehaviour
         GhostMode next = scaredTime <= 0f ? GhostMode.Normal : scaredTime <= 3f ? GhostMode.Recovering : GhostMode.Scared;
         if (Mode != next) SetMode(next);
     }
-    public void Eaten() { deadTime = 3f; SetMode(GhostMode.Dead); }
-    public void Tick(float deltaTime, float scaredTime)
+    private string DirectionName() => facing.x > 0 ? "Right" : facing.x < 0 ? "Left" : facing.y < 0 ? "Up" : "Down";
+    public void Face(Vector2Int direction)
     {
-        if (Mode == GhostMode.Dead)
-        {
-            deadTime -= deltaTime;
-            if (deadTime <= 0f)
-                SetMode(scaredTime <= 0f ? GhostMode.Normal : scaredTime <= 3f ? GhostMode.Recovering : GhostMode.Scared);
-        }
-        else SetGlobalMode(scaredTime);
+        if (facing == direction) return;
+        facing = direction;
+        if (Mode == GhostMode.Normal || Mode == GhostMode.Scared) SetMode(Mode);
     }
+    public void Eaten() { SetMode(GhostMode.Dead); }
+    public void Revive(float scaredTime)
+    {
+        SetMode(scaredTime <= 0f ? GhostMode.Normal : scaredTime <= 3f ? GhostMode.Recovering : GhostMode.Scared);
+    }
+    public void Tick(float deltaTime, float scaredTime) { SetGlobalMode(scaredTime); }
     public void Freeze() { animator.speed = 0f; }
     public void ResetGhost()
     {
         transform.position = spawnPosition;
-        deadTime = 0f;
+        facing = new Vector2Int(0, 1);
+        GetComponent<GhostController>().ResetMovement();
         SetMode(GhostMode.Normal);
     }
 }

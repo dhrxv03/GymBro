@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     private float gameTime;
     private float scaredTime;
     public RoundState State { get; private set; } = RoundState.Countdown;
+    public float ScaredTime => scaredTime;
     public bool IsPlaying => State == RoundState.Playing;
 
     private IEnumerator Start()
@@ -93,6 +94,14 @@ public class GameController : MonoBehaviour
             if (ghost.Mode == GhostMode.Normal) { StartCoroutine(PlayerDeath()); return; }
             ghost.Eaten(); score += 300; hud.SetScore(score); audioController.PlayEnemy(); RefreshMusic();
         }
+    }
+
+    public void GhostReturned() { RefreshMusic(); }
+    public void GhostMoved(GhostStateController ghost, Vector3 from, Vector3 to)
+    {
+        if (!IsPlaying || ghost.Mode == GhostMode.Dead || !NearSegment(player.transform.position, from, to, .45f)) return;
+        if (ghost.Mode == GhostMode.Normal) StartCoroutine(PlayerDeath());
+        else { ghost.Eaten(); score += 300; hud.SetScore(score); audioController.PlayEnemy(); RefreshMusic(); }
     }
 
     public void BonusMoved(Vector3 from, Vector3 to)

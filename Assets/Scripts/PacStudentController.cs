@@ -11,6 +11,8 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioClip pelletSound;
     [SerializeField] private ParticleSystem dust;
 
+    public float MoveSpeed => moveSpeed;
+
     // Grid directions: positive x is right; positive y is down the map.
     private Vector2Int lastInput;
     private Vector2Int currentInput;
