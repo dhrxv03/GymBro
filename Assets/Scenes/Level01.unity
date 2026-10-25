@@ -14204,7 +14204,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
       cycleCount: 1
-      repeatInterval: 0.0001
+      repeatInterval: 0.01
       probability: 1
   SizeModule:
     enabled: 0
@@ -36513,7 +36513,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
       cycleCount: 1
-      repeatInterval: 0.0001
+      repeatInterval: 0.01
       probability: 1
   SizeModule:
     enabled: 0
@@ -48296,7 +48296,7 @@ MonoBehaviour:
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -59770,6 +59770,7 @@ GameObject:
   - component: {fileID: 2100000001}
   - component: {fileID: 2100000004}
   - component: {fileID: 2100000003}
+  - component: {fileID: 2100000005}
   m_Layer: 0
   m_Name: Ghost_Burger
   m_TagString: Untagged
@@ -59887,6 +59888,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2100000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673d5d280fd6f4b22862e69bf2426c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostController
+  level: {fileID: 44020077}
+  game: {fileID: 1614889456}
+  player: {fileID: 2072268066}
+  ghostNumber: 1
 --- !u!1 &2100000010
 GameObject:
   m_ObjectHideFlags: 0
@@ -59899,6 +59916,7 @@ GameObject:
   - component: {fileID: 2100000011}
   - component: {fileID: 2100000014}
   - component: {fileID: 2100000013}
+  - component: {fileID: 2100000015}
   m_Layer: 0
   m_Name: Ghost_Doughnut
   m_TagString: Untagged
@@ -60016,6 +60034,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2100000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673d5d280fd6f4b22862e69bf2426c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostController
+  level: {fileID: 44020077}
+  game: {fileID: 1614889456}
+  player: {fileID: 2072268066}
+  ghostNumber: 2
 --- !u!1 &2100000020
 GameObject:
   m_ObjectHideFlags: 0
@@ -60028,6 +60062,7 @@ GameObject:
   - component: {fileID: 2100000021}
   - component: {fileID: 2100000024}
   - component: {fileID: 2100000023}
+  - component: {fileID: 2100000025}
   m_Layer: 0
   m_Name: Ghost_Pizza
   m_TagString: Untagged
@@ -60145,6 +60180,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2100000025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673d5d280fd6f4b22862e69bf2426c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostController
+  level: {fileID: 44020077}
+  game: {fileID: 1614889456}
+  player: {fileID: 2072268066}
+  ghostNumber: 3
 --- !u!1 &2100000030
 GameObject:
   m_ObjectHideFlags: 0
@@ -60157,6 +60208,7 @@ GameObject:
   - component: {fileID: 2100000031}
   - component: {fileID: 2100000034}
   - component: {fileID: 2100000033}
+  - component: {fileID: 2100000035}
   m_Layer: 0
   m_Name: Ghost_Fries
   m_TagString: Untagged
@@ -60274,6 +60326,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2100000035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673d5d280fd6f4b22862e69bf2426c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostController
+  level: {fileID: 44020077}
+  game: {fileID: 1614889456}
+  player: {fileID: 2072268066}
+  ghostNumber: 4
 --- !u!1001 &2100751487
 PrefabInstance:
   m_ObjectHideFlags: 0
