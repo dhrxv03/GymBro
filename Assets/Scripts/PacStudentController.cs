@@ -11,6 +11,8 @@ public class PacStudentController : MonoBehaviour
     [SerializeField] private AudioClip pelletSound;
     [SerializeField] private ParticleSystem dust;
 
+    [SerializeField] private WorkoutController workout;
+    public bool IsMoving => isMoving;
     public float MoveSpeed => moveSpeed;
 
     // Grid directions: positive x is right; positive y is down the map.
@@ -90,7 +92,7 @@ public class PacStudentController : MonoBehaviour
             return;
         }
         ReadInput();
-        AdvanceMovement(Time.deltaTime);
+        AdvanceMovement(Time.deltaTime * (workout != null ? workout.MovementMultiplier : 1f));
         if (game.IsPlaying) UpdateEffects();
     }
 

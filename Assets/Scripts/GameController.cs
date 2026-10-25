@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameAudioController audioController;
     [SerializeField] private ParticleSystem wallEffect;
     [SerializeField] private ParticleSystem deathEffect;
+    [SerializeField] private WorkoutController workout;
     private int score;
     private int lives = 3;
     private float gameTime;
@@ -67,6 +68,7 @@ public class GameController : MonoBehaviour
         int tile = level.Collect(cell);
         if (tile == 0) return;
         score += tile == 6 ? 50 : 10;
+        if (workout != null) workout.GainEnergy();
         if (tile == 6)
         {
             scaredTime = 10f;
@@ -75,7 +77,7 @@ public class GameController : MonoBehaviour
             RefreshMusic();
         }
         hud.SetScore(score);
-        if (level.RemainingPellets == 0) EndGame();
+        if (workout == null && level.RemainingPellets == 0) EndGame();
     }
 
     // Check the travelled segment, so a long frame cannot skip a pickup or ghost.
@@ -91,7 +93,11 @@ public class GameController : MonoBehaviour
         foreach (var ghost in ghosts)
         {
             if (ghost.Mode == GhostMode.Dead || !NearSegment(ghost.transform.position, from, to, .45f)) continue;
-            if (ghost.Mode == GhostMode.Normal) { StartCoroutine(PlayerDeath()); return; }
+            if (ghost.Mode == GhostMode.Normal)
+            {
+                if (workout == null || !workout.IsDashing) { StartCoroutine(PlayerDeath()); return; }
+                continue;
+            }
             ghost.Eaten(); score += 300; hud.SetScore(score); audioController.PlayEnemy(); RefreshMusic();
         }
     }
@@ -100,7 +106,10 @@ public class GameController : MonoBehaviour
     public void GhostMoved(GhostStateController ghost, Vector3 from, Vector3 to)
     {
         if (!IsPlaying || ghost.Mode == GhostMode.Dead || !NearSegment(player.transform.position, from, to, .45f)) return;
-        if (ghost.Mode == GhostMode.Normal) StartCoroutine(PlayerDeath());
+        if (ghost.Mode == GhostMode.Normal)
+        {
+            if (workout == null || !workout.IsDashing) StartCoroutine(PlayerDeath());
+        }
         else { ghost.Eaten(); score += 300; hud.SetScore(score); audioController.PlayEnemy(); RefreshMusic(); }
     }
 
@@ -129,6 +138,7 @@ public class GameController : MonoBehaviour
     private IEnumerator PlayerDeath()
     {
         State = RoundState.Dying;
+        if (workout != null) workout.ResetAfterDeath();
         lives--; hud.SetLives(lives);
         foreach (var ghost in ghosts) ghost.Freeze();
         deathEffect.transform.position = player.transform.position;
@@ -143,14 +153,20 @@ public class GameController : MonoBehaviour
         RefreshMusic();
     }
 
-    private void EndGame()
+    public void PlayDashSound() { audioController.PlayBonus(); }
+    public void AwardWorkout()
+    {
+        score += 500; hud.SetScore(score); audioController.PlayBonus();
+    }
+    public void CompleteWorkoutCircuit() { EndGame("CIRCUIT COMPLETE"); }
+    private void EndGame(string message = "GAME OVER")
     {
         if (State == RoundState.GameOver) return;
         State = RoundState.GameOver;
         player.StopMotion();
         foreach (var ghost in ghosts) ghost.Freeze();
         audioController.StopMusic();
-        hud.ShowMessage("GAME OVER");
+        hud.ShowMessage(message);
         HighScoreStore.SaveIfBetter(SceneManager.GetActiveScene().name, score, gameTime);
         StartCoroutine(ReturnToMenu());
     }

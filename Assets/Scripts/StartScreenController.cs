@@ -25,7 +25,6 @@ public class StartScreenController : MonoBehaviour
 
     public void OpenLevelTwo()
     {
-        // This button becomes functional when the innovation level is added.
         if (Application.CanStreamedLevelBeLoaded("InnovationScene"))
             SceneManager.LoadScene("InnovationScene");
     }
