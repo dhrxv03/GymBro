@@ -21,7 +21,7 @@ public class HUDController : MonoBehaviour
     public void SetScaredTime(float seconds)
     {
         scaredText.gameObject.SetActive(seconds > 0f);
-        scaredText.text = Mathf.CeilToInt(seconds).ToString();
+        scaredText.text = "POWER-UP: " + Mathf.CeilToInt(seconds) + "s";
     }
     public void ShowMessage(string message)
     {

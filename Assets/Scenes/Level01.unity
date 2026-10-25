@@ -2930,7 +2930,6 @@ RectTransform:
   - {fileID: 593015109}
   - {fileID: 730229396}
   - {fileID: 1222120661}
-  - {fileID: 2068878799}
   - {fileID: 398490001}
   m_Father: {fileID: 1742031024}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12924,7 +12923,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: 0}
+  m_AnchoredPosition: {x: 125, y: 10}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &633186057
@@ -47652,6 +47651,7 @@ MonoBehaviour:
   audioController: {fileID: 1934552273}
   wallEffect: {fileID: 1497178748}
   deathEffect: {fileID: 647430569}
+  workout: {fileID: 0}
 --- !u!4 &1614889457
 Transform:
   m_ObjectHideFlags: 0
@@ -50681,6 +50681,7 @@ RectTransform:
   - {fileID: 1434650085}
   - {fileID: 778386931}
   - {fileID: 1669831868}
+  - {fileID: 2068878799}
   m_Father: {fileID: 1742031024}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -58480,12 +58481,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 136212603}
+  m_Father: {fileID: 1750870642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 44}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 125, y: -27}
+  m_SizeDelta: {x: 240, y: 26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2068878800
 MonoBehaviour:
@@ -58509,7 +58510,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 17
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -58520,7 +58521,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 'POWER-UP: 10s'
 --- !u!222 &2068878801
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -58885,6 +58886,7 @@ MonoBehaviour:
   movementSound: {fileID: 8300000, guid: 2269828a57f0d4b3ab958b65f08bc172, type: 3}
   pelletSound: {fileID: 8300000, guid: 21081d71b2f92473bb70c92183837e97, type: 3}
   dust: {fileID: 1599891796}
+  workout: {fileID: 0}
 --- !u!1001 &2073081567
 PrefabInstance:
   m_ObjectHideFlags: 0
