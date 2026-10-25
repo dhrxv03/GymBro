@@ -1020,7 +1020,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Innovation \u2014 coming later"
+  m_Text: Workout Circuit - dash and train
 --- !u!222 &670066437
 CanvasRenderer:
   m_ObjectHideFlags: 0
