@@ -31,6 +31,47 @@ public class LevelGenerator : MonoBehaviour
     private readonly int[] rowStep = { 0, 1, 0, -1 };
     private readonly int[] columnStep = { 1, 0, -1, 0 };
 
+    private int[,] fullMap;
+    private GameObject[,] spawnedTiles;
+
+    public int Rows => levelMap.GetLength(0) * 2 - 1;
+    public int Columns => levelMap.GetLength(1) * 2;
+
+    private void Awake()
+    {
+        fullMap = MirrorMap(levelMap);
+    }
+
+    public int GetTile(Vector2Int cell)
+    {
+        if (cell.x < 0 || cell.x >= Columns || cell.y < 0 || cell.y >= Rows)
+            return -1;
+        return fullMap[cell.y, cell.x];
+    }
+
+    public bool CanPlayerEnter(Vector2Int cell)
+    {
+        int tile = GetTile(cell);
+        // The ghost gate (8) is a wall for the player.
+        return tile == 0 || tile == 5 || tile == 6;
+    }
+
+    public bool HasPellet(Vector2Int cell)
+    {
+        return GetTile(cell) == 5 && spawnedTiles != null && spawnedTiles[cell.y, cell.x] != null;
+    }
+
+    public Vector3 GridToWorld(Vector2Int cell)
+    {
+        return new Vector3(cell.x - (Columns - 1) / 2f, (Rows - 1) / 2f - cell.y, 0f);
+    }
+
+    public Vector2Int WorldToGrid(Vector3 position)
+    {
+        return new Vector2Int(Mathf.RoundToInt(position.x + (Columns - 1) / 2f),
+            Mathf.RoundToInt((Rows - 1) / 2f - position.y));
+    }
+
     private void Start()
     {
         GenerateLevel();
@@ -47,6 +88,7 @@ public class LevelGenerator : MonoBehaviour
         }
 
         int[,] map = MirrorMap(levelMap);
+        fullMap = map;
         for (int row = 0; row < map.GetLength(0); row++)
         {
             for (int column = 0; column < map.GetLength(1); column++)
@@ -76,6 +118,7 @@ public class LevelGenerator : MonoBehaviour
         var level = new GameObject("GeneratedLevel");
         int rows = map.GetLength(0);
         int columns = map.GetLength(1);
+        spawnedTiles = new GameObject[rows, columns];
         for (int row = 0; row < rows; row++)
         {
             var rowGroup = new GameObject("Row_" + row.ToString("D2"));
@@ -89,6 +132,7 @@ public class LevelGenerator : MonoBehaviour
                 GameObject piece = Instantiate(tilePrefabs[tile], position, Quaternion.Euler(0f, 0f, angle), rowGroup.transform);
                 piece.name = tilePrefabs[tile].name + "_R" + row.ToString("D2") + "_C" + column.ToString("D2");
                 piece.transform.localScale = Vector3.one;
+                spawnedTiles[row, column] = piece;
             }
         }
 
