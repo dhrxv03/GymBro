@@ -1287,6 +1287,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a3cfc181a2d4763ae4b0d9d4902f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartScreenController
+  levelOneRecord: {fileID: 1063735146}
+  levelTwoRecord: {fileID: 1448846196}
 --- !u!4 &743146604
 Transform:
   m_ObjectHideFlags: 0
@@ -4505,7 +4507,7 @@ MonoBehaviour:
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 84
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
