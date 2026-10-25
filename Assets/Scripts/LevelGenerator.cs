@@ -34,6 +34,8 @@ public class LevelGenerator : MonoBehaviour
     private int[,] fullMap;
     private GameObject[,] spawnedTiles;
 
+    public int RemainingPellets { get; private set; }
+
     public int Rows => levelMap.GetLength(0) * 2 - 1;
     public int Columns => levelMap.GetLength(1) * 2;
 
@@ -59,6 +61,17 @@ public class LevelGenerator : MonoBehaviour
     public bool HasPellet(Vector2Int cell)
     {
         return GetTile(cell) == 5 && spawnedTiles != null && spawnedTiles[cell.y, cell.x] != null;
+    }
+
+    public int Collect(Vector2Int cell)
+    {
+        int tile = GetTile(cell);
+        if ((tile != 5 && tile != 6) || spawnedTiles == null || spawnedTiles[cell.y, cell.x] == null) return 0;
+        Destroy(spawnedTiles[cell.y, cell.x]);
+        spawnedTiles[cell.y, cell.x] = null;
+        fullMap[cell.y, cell.x] = 0;
+        RemainingPellets--;
+        return tile;
     }
 
     public Vector3 GridToWorld(Vector2Int cell)
@@ -119,6 +132,7 @@ public class LevelGenerator : MonoBehaviour
         int rows = map.GetLength(0);
         int columns = map.GetLength(1);
         spawnedTiles = new GameObject[rows, columns];
+        RemainingPellets = 0;
         for (int row = 0; row < rows; row++)
         {
             var rowGroup = new GameObject("Row_" + row.ToString("D2"));
@@ -133,6 +147,7 @@ public class LevelGenerator : MonoBehaviour
                 piece.name = tilePrefabs[tile].name + "_R" + row.ToString("D2") + "_C" + column.ToString("D2");
                 piece.transform.localScale = Vector3.one;
                 spawnedTiles[row, column] = piece;
+                if (tile == 5 || tile == 6) RemainingPellets++;
             }
         }
 

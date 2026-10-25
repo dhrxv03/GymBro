@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PacStudentController : MonoBehaviour
 {
     [SerializeField] private LevelGenerator level;
+    [SerializeField] private GameController game;
     [SerializeField, Min(0.1f)] private float moveSpeed = 5f;
     [SerializeField] private AudioClip movementSound;
     [SerializeField] private AudioClip pelletSound;
@@ -19,6 +20,8 @@ public class PacStudentController : MonoBehaviour
     private Vector3 endPosition;
     private float elapsed;
     private bool isMoving;
+    private bool forceInwardStep;
+    private Vector2Int lastBlockedDirection;
     private string walkingState = "PacStudent_WalkRight";
     private Animator animator;
     private AudioSource movementSource;
@@ -40,19 +43,53 @@ public class PacStudentController : MonoBehaviour
             enabled = false;
             return;
         }
-        cell = level.WorldToGrid(transform.position);
+        ResetPlayer();
+    }
+
+    public void ResetPlayer()
+    {
+        cell = new Vector2Int(1, 1);
+        lastInput = Vector2Int.zero;
+        currentInput = Vector2Int.zero;
+        lastBlockedDirection = Vector2Int.zero;
+        isMoving = false;
+        forceInwardStep = false;
+        elapsed = 0f;
         transform.position = level.GridToWorld(cell);
-        // Face right, but wait for the first key press before moving.
+        walkingState = "PacStudent_WalkRight";
         animator.Play(walkingState, 0, 0f);
         animator.Update(0f);
         UpdateEffects();
     }
 
+    public void StopMotion()
+    {
+        isMoving = false;
+        movementSource.Stop();
+        animator.speed = 0f;
+        if (dust != null) dust.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    public void PlayDeath(float duration)
+    {
+        StopMotion();
+        float clipLength = .333333f;
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+            if (clip.name == "PacStudent_Death") clipLength = clip.length;
+        animator.speed = clipLength / duration;
+        animator.Play("PacStudent_Death", 0, 0f);
+    }
+
     private void Update()
     {
+        if (!game.IsPlaying)
+        {
+            if (game.State != RoundState.Dying) StopMotion();
+            return;
+        }
         ReadInput();
         AdvanceMovement(Time.deltaTime);
-        UpdateEffects();
+        if (game.IsPlaying) UpdateEffects();
     }
 
     private void ReadInput()
@@ -68,10 +105,21 @@ public class PacStudentController : MonoBehaviour
 
     private bool BeginStep()
     {
-        if (lastInput != Vector2Int.zero && level.CanPlayerEnter(cell + lastInput))
+        if (forceInwardStep)
+            forceInwardStep = false;
+        else if (lastInput != Vector2Int.zero && level.CanPlayerEnter(cell + lastInput))
             currentInput = lastInput;
         else if (currentInput == Vector2Int.zero || !level.CanPlayerEnter(cell + currentInput))
+        {
+            Vector2Int blocked = currentInput != Vector2Int.zero ? currentInput : lastInput;
+            if (blocked != Vector2Int.zero && blocked != lastBlockedDirection)
+            {
+                lastBlockedDirection = blocked;
+                game.HitWall(transform.position, blocked);
+            }
             return false;
+        }
+        lastBlockedDirection = Vector2Int.zero;
 
         targetCell = cell + currentInput;
         startPosition = level.GridToWorld(cell);
@@ -110,13 +158,23 @@ public class PacStudentController : MonoBehaviour
             float step = Mathf.Min(remaining, duration - elapsed);
             elapsed += step;
             remaining -= step;
+            Vector3 before = transform.position;
             transform.position = Vector3.Lerp(startPosition, endPosition, elapsed / duration);
+            game.PlayerMoved(before, transform.position);
+            if (!game.IsPlaying) return;
             // Treat tiny floating-point differences as reaching the tile centre.
             if (elapsed >= duration - .000001f)
             {
                 transform.position = endPosition;
                 cell = targetCell;
                 isMoving = false;
+                if (cell.y == level.Rows / 2 && (cell.x == 0 || cell.x == level.Columns - 1))
+                {
+                    // Teleport only at a tunnel end; never sweep collisions across the maze.
+                    cell.x = cell.x == 0 ? level.Columns - 1 : 0;
+                    transform.position = level.GridToWorld(cell);
+                    forceInwardStep = true;
+                }
             }
             else break;
         }

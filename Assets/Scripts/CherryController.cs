@@ -3,6 +3,8 @@ using UnityEngine;
 public class CherryController : MonoBehaviour
 {
     [SerializeField] private LevelGenerator level;
+    [SerializeField] private GameController game;
+    public GameObject Bonus => bonus;
     [SerializeField] private Camera gameCamera;
     [SerializeField] private GameObject bonusPrefab;
     [SerializeField] private float spawnDelay = 5f;
@@ -19,7 +21,9 @@ public class CherryController : MonoBehaviour
 
     private void Update()
     {
-        AdvanceBonus(Time.deltaTime);
+        // Count the intro towards the first five-second spawn delay, without moving during it.
+        if (game.State == RoundState.Countdown) waitTime += Time.deltaTime;
+        else if (game.IsPlaying) AdvanceBonus(Time.deltaTime);
     }
 
     private void AdvanceBonus(float deltaTime)
@@ -33,8 +37,11 @@ public class CherryController : MonoBehaviour
             return;
         }
 
+        Vector3 before = bonus.transform.position;
         elapsed += deltaTime;
         bonus.transform.position = Vector3.Lerp(startPosition, endPosition, elapsed / duration);
+        game.BonusMoved(before, bonus.transform.position);
+        if (bonus == null) return;
         if (elapsed >= duration)
         {
             Destroy(bonus);
@@ -42,6 +49,15 @@ public class CherryController : MonoBehaviour
             waitTime = 0f;
             hadBonus = false;
         }
+    }
+
+    public void CollectBonus()
+    {
+        if (bonus == null) return;
+        Destroy(bonus);
+        bonus = null;
+        hadBonus = false;
+        waitTime = 0f;
     }
 
     private void SpawnBonus()
