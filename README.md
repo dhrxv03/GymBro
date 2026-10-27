@@ -1,4 +1,8 @@
-# GymBro — Assessment 3
+# GymBro - Assessment 3
+
+## AI Declaration: 
+AI was used to solve some of the StateController Issues and later to beautify and to simplify/add the comments wherever needed.
+
 ## Audio credits
 | Local file | Track / effect | Source |
 |---|---|---|
